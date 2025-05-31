@@ -37,17 +37,26 @@ class DashboardView:
     
     def criar_menu(self):
         """Cria o menu lateral"""
+        # Itens principais do menu com ícones
         itens_menu = [
-            {'texto': 'Dashboard', 'comando': self.mostrar_dashboard},
-            {'texto': 'Cartas de Acordo', 'comando': self.mostrar_cartas_acordo},
-            {'texto': 'Eventos', 'comando': self.mostrar_eventos},
-            {'texto': 'Produtos/Serviços', 'comando': self.mostrar_produtos_servicos},
-            {'texto': 'Custeio', 'comando': self.mostrar_custeio},
-            {'texto': 'Aditivos', 'comando': self.mostrar_aditivos},
-            {'texto': 'Relatórios', 'comando': self.mostrar_relatorios},
-            {'texto': 'Sair', 'comando': self.sair},
+            {'texto': 'Dashboard', 'comando': self.mostrar_dashboard, 'icone': '📊'},
+            {'texto': 'Cartas de Acordo', 'comando': self.mostrar_cartas_acordo, 'icone': '📝'},
+            {'texto': 'Eventos', 'comando': self.mostrar_eventos, 'icone': '📅'},
+            {'texto': 'Produtos/Serviços', 'comando': self.mostrar_produtos_servicos, 'icone': '🛒'},
+            {'texto': 'Relatórios', 'comando': self.mostrar_relatorios, 'icone': '📈'},
         ]
+        
+        # Cria o menu com os itens principais
         self.menu = Menu(self.frame, itens_menu)
+        
+        # Adiciona o botão Sair de forma mais discreta
+        menu_container = self.menu.frame.winfo_children()[2]  # Obtém o container dos itens de menu
+        ttk.Separator(menu_container).pack(fill=tk.X, padx=15, pady=(15, 15))
+        
+        # Cria o botão Sair com estilo secundário (mais discreto) e ícone
+        frame_sair = ttk.Frame(menu_container, style='Card.TFrame')
+        frame_sair.pack(fill=tk.X, pady=8, padx=15)
+        self.menu.criar_botao_menu(frame_sair, 'Sair', self.sair, '🚪', 'Secundario')
     
     def limpar_conteudo(self):
         """Limpa o frame de conteúdo"""

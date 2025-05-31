@@ -1,7 +1,9 @@
 from models.db_manager import get_connection
 
 def adicionar_produto_servico(codigo_demanda, fornecedor, modalidade, objetivo, 
-                           vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato):
+                           vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato,
+                           instituicao=None, instrumento=None, subprojeto=None, ta=None, pta=None, 
+                           acao=None, resultado=None, meta=None):
     """Adiciona um novo produto/serviço
     
     Returns:
@@ -12,10 +14,12 @@ def adicionar_produto_servico(codigo_demanda, fornecedor, modalidade, objetivo,
     
     cursor.execute("""
     INSERT INTO produtos_servicos (codigo_demanda, fornecedor, modalidade, objetivo,
-                               vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato)
-    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                               vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato,
+                               instituicao, instrumento, subprojeto, ta, pta, acao, resultado, meta)
+    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
     """, (codigo_demanda, fornecedor, modalidade, objetivo, 
-         vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato))
+         vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato,
+         instituicao, instrumento, subprojeto, ta, pta, acao, resultado, meta))
     
     # Obter o ID do produto/serviço inserido
     produto_id = cursor.lastrowid
@@ -44,7 +48,9 @@ def obter_produtos_por_demanda(codigo_demanda):
     return produtos
 
 def editar_produto_servico(id_produto, codigo_demanda, fornecedor, modalidade, objetivo, 
-                        vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato):
+                        vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato,
+                        instituicao=None, instrumento=None, subprojeto=None, ta=None, pta=None, 
+                        acao=None, resultado=None, meta=None):
     """Edita um produto/serviço existente"""
     conn = get_connection()
     cursor = conn.cursor()
@@ -52,10 +58,12 @@ def editar_produto_servico(id_produto, codigo_demanda, fornecedor, modalidade, o
     cursor.execute("""
     UPDATE produtos_servicos SET 
         codigo_demanda = ?, fornecedor = ?, modalidade = ?, objetivo = ?,
-        vigencia_inicial = ?, vigencia_final = ?, observacao = ?, valor_estimado = ?, total_contrato = ?
+        vigencia_inicial = ?, vigencia_final = ?, observacao = ?, valor_estimado = ?, total_contrato = ?,
+        instituicao = ?, instrumento = ?, subprojeto = ?, ta = ?, pta = ?, acao = ?, resultado = ?, meta = ?
     WHERE id = ?
     """, (codigo_demanda, fornecedor, modalidade, objetivo, 
-         vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato, id_produto))
+         vigencia_inicial, vigencia_final, observacao, valor_estimado, total_contrato,
+         instituicao, instrumento, subprojeto, ta, pta, acao, resultado, meta, id_produto))
     
     conn.commit()
     conn.close()

@@ -436,7 +436,7 @@ class Menu:
         """
         Args:
             master: widget pai
-            itens: lista de dicionários com {'texto': 'texto do botão', 'comando': função}
+            itens: lista de dicionários com {'texto': 'texto do botão', 'comando': função, 'icone': 'emoji ou símbolo'}
         """
         self.frame = ttk.Frame(master, style='CardBorda.TFrame', width=220)
         self.frame.pack_propagate(False)
@@ -460,9 +460,57 @@ class Menu:
         
         # Itens do menu
         for item in itens:
-            # Usa a função criar_botao para garantir consistência visual
-            btn = criar_botao(menu_container, item['texto'], item['comando'], "Primario", 20)
-            btn.pack(pady=8, padx=15, fill=tk.X)
+            # Cria um frame para cada item do menu
+            frame_item = ttk.Frame(menu_container, style='Card.TFrame')
+            frame_item.pack(fill=tk.X, pady=8, padx=15)
+            
+            # Cria o botão com ícone e texto alinhado à esquerda
+            self.criar_botao_menu(frame_item, item['texto'], item['comando'], item.get('icone', ''), item.get('estilo', 'Primario'))
+    
+    def criar_botao_menu(self, master, texto, comando, icone='', estilo="Primario"):
+        """Cria um botão de menu com ícone e texto alinhado à esquerda"""
+        # Define as cores baseadas no estilo
+        if estilo == "Primario":
+            bg_color = Cores.BOTAO_PRIMARIO_FUNDO
+            fg_color = Cores.BOTAO_PRIMARIO_TEXTO
+            hover_color = Cores.BOTAO_PRIMARIO_HOVER
+        elif estilo == "Secundario":
+            bg_color = Cores.BOTAO_SECUNDARIO_FUNDO
+            fg_color = Cores.BOTAO_SECUNDARIO_TEXTO
+            hover_color = Cores.BOTAO_SECUNDARIO_HOVER
+        else:
+            bg_color = Cores.BOTAO_PRIMARIO_FUNDO
+            fg_color = Cores.BOTAO_PRIMARIO_TEXTO
+            hover_color = Cores.BOTAO_PRIMARIO_HOVER
+        
+        # Cria o botão personalizado
+        btn = tk.Button(master, 
+                      text=f"{icone} {texto}" if icone else texto,
+                      command=comando,
+                      bg=bg_color,
+                      fg=fg_color,
+                      activebackground=hover_color,
+                      activeforeground=fg_color,
+                      relief='flat',
+                      borderwidth=0,
+                      font=('Segoe UI', 10, 'bold' if estilo == "Primario" else 'normal'),
+                      cursor='hand2',
+                      height=2,
+                      anchor='w',  # Alinha o texto à esquerda
+                      padx=10)
+        
+        # Adiciona efeitos de hover
+        def on_enter(e):
+            btn.configure(bg=hover_color)
+        
+        def on_leave(e):
+            btn.configure(bg=bg_color)
+        
+        btn.bind("<Enter>", on_enter)
+        btn.bind("<Leave>", on_leave)
+        
+        btn.pack(fill=tk.X, expand=True)
+        return btn
 
 def mostrar_mensagem(titulo, mensagem, tipo="info"):
     """Exibe uma mensagem em uma janela modal
